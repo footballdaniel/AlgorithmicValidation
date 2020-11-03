@@ -38,7 +38,7 @@ for file in glob.glob('../data/*.mp4'):
     stream = ffmpeg.drawtext(
         stream,
         text='%{frame_num}',
-        start_number=1,
+        start_number=0, # 0 index
         escape_text=False, # This allows for text to be dynamically changed
         x=20,
         y=20,
@@ -58,10 +58,15 @@ for file in glob.glob('../data/*.mp4'):
 
     stream = ffmpeg.output(
         stream, 
-        pathOutput,
+        # pathOutput, # For movie output
+        '../data/' + fileTag + '_%03d.jpeg', # For image output
+        start_number = frameStart,
         **{'loglevel': 0}) # Prevent any logs from ffmpeg
+
     stream = ffmpeg.overwrite_output(stream)
 
     # Run on file
     # stream.get_args() # Debug what ffmpeg does
     stream.run()
+
+    a = 1
