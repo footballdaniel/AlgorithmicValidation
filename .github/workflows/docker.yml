@@ -1,7 +1,7 @@
 name: "GitHub Docker"
 on:
   push
-  
+
 jobs:
   buildDocker:
     runs-on: ubuntu-20.04
@@ -9,5 +9,5 @@ jobs:
       - name: Publish Image
         uses: matootie/github-docker@v3.1.0
         with:
-          accessToken: ${{ secrets.PAT }}
+          accessToken: ${{ secrets.GithubDockerContainer }}
           containerRegistry: true
