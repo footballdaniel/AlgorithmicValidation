@@ -1,20 +1,15 @@
-name: Publish Docker image
+name: "GitHub Docker"
 on:
-  push
-
+  push:
+    paths:
+      - ".github/workflows/CI.yml"
+      - "dist/index.js"
 jobs:
-  push_to_registry:
-    name: Push Docker image to GitHub Packages
-    runs-on: ubuntu-latest
+  buildDocker:
+    runs-on: ubuntu-20.04
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v2
+      - name: Publish Image
+        uses: matootie/github-docker@v3.1.0
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: footballdaniel/AlgorithmicValidation/Streamlit
-          tag_with_ref: true
-
+          accessToken: ${{ secrets.PAT }}
+          containerRegistry: true
