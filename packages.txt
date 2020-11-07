@@ -1,0 +1,2 @@
+# This is a list of debian based packages to be installed
+python-opencv 
