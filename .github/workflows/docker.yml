@@ -1,9 +1,7 @@
 name: "GitHub Docker"
 on:
-  push:
-    paths:
-      - ".github/workflows/CI.yml"
-      - "dist/index.js"
+  push
+  
 jobs:
   buildDocker:
     runs-on: ubuntu-20.04
