@@ -11,5 +11,3 @@ jobs:
         with:
           accessToken: ${{ secrets.CR_PAT }}
           containerRegistry: true
-          context: .
-          contextName: Dockerfile
