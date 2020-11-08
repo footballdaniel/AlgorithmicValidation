@@ -9,5 +9,5 @@ jobs:
       - name: Publish Image
         uses: matootie/github-docker@v3.1.0
         with:
-          accessToken: ${{ secrets.GithubDockerContainer }}
+          accessToken: ${{ secrets.CR_PAT }}
           containerRegistry: true
