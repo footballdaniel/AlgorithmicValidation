@@ -37,5 +37,5 @@ jobs:
           context: .
           push: true
           file: ./Dockerfile
-          tags: footballdaniel/algorithmicvalidation:latest
+          tags: ghcr.io/footballdaniel/algorithmicvalidation:latest
 
