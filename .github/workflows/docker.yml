@@ -35,7 +35,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: true
           file: ./Dockerfile
+          platforms: linux/386
+          push: true
           tags: ghcr.io/footballdaniel/algorithmicvalidation:latest
 
