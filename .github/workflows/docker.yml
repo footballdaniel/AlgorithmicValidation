@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branch: main
+    branch: docker
 
 jobs:
   multi-registries:
