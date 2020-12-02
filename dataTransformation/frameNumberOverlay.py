@@ -17,7 +17,7 @@ cutoffStart = cutoffs[:,1].astype(int)
 cutoffEnd = cutoffs[:,2].astype(int)
 
 #  For each video file
-for file in glob.glob('../data/*.mp4'):
+for file in glob.glob('_input/*.mp4'):
 
     # Define where to read and where to write
     pathInput = file
@@ -35,38 +35,38 @@ for file in glob.glob('../data/*.mp4'):
     # Specify process steps
     stream = ffmpeg.input(pathInput)
     
+    # Overlay frame number
     stream = ffmpeg.drawtext(
         stream,
-        text='%{frame_num}',
+        text=f'Trial: {fileTag}, '+ 'Frame: %{frame_num}',
         start_number=0, # 0 index
         escape_text=False, # This allows for text to be dynamically changed
         x=20,
         y=20,
+        fontfile = 'arial.ttf',
         fontcolor='black',
         fontsize=20,
         box=1,
         boxcolor='white',
         boxborderw=5
-        )
-        
+    )
+    
     stream = ffmpeg.concat(
         stream.trim(
             start_frame=frameStart,
             end_frame=frameEnd
             )
-        )
+    )
 
     stream = ffmpeg.output(
         stream, 
-        # pathOutput, # For movie output
-        '../data/' + fileTag + '_%03d.jpeg', # For image output
-        start_number = frameStart,
-        **{'loglevel': 0}) # Prevent any logs from ffmpeg
+        '_output/' + pathOutput, # For movie output
+        # '_output/' + fileTag + '_%03d.jpeg', # For image output
+        # **{'loglevel': 0}) # Prevent any logs from ffmpeg
+    )
 
     stream = ffmpeg.overwrite_output(stream)
 
     # Run on file
-    # stream.get_args() # Debug what ffmpeg does
-    stream.run()
-
-    a = 1
+    print(stream.get_args()) # Debug what ffmpeg does
+    stream.run() # If it doesnt run, consult: https://github.com/kkroening/ffmpeg-python/issues/165

@@ -1,5 +1,6 @@
 # Project specific ignores
-data/*
+dataTransformation/_input/*
+dataTransformation/_output/*
 testing/*
 .vscode/
 
