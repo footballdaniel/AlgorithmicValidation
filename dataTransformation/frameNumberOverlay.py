@@ -33,7 +33,7 @@ for file in glob.glob('_input/*.mp4'):
         continue
 
     # Specify process steps
-    stream = ffmpeg.input(pathInput)
+    stream = ffmpeg.input(pathInput, r=1)
     
     # Overlay frame number
     stream = ffmpeg.drawtext(
@@ -60,13 +60,18 @@ for file in glob.glob('_input/*.mp4'):
 
     stream = ffmpeg.output(
         stream, 
-        '_output/' + pathOutput, # For movie output
-        # '_output/' + fileTag + '_%03d.jpeg', # For image output
-        # **{'loglevel': 0}) # Prevent any logs from ffmpeg
+        # '_output/' + pathOutput, # For movie output
+        '_output/' + fileTag + '_%03d.jpeg', # For image output
+        **{'loglevel': 0}, # Prevent any logs from ffmpeg
+        start_number = frameStart,
+        r=1
     )
 
+    # If the file exists, simply overwrite it (using '-y')
     stream = ffmpeg.overwrite_output(stream)
 
     # Run on file
     print(stream.get_args()) # Debug what ffmpeg does
     stream.run() # If it doesnt run, consult: https://github.com/kkroening/ffmpeg-python/issues/165
+
+    a = 1
