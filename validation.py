@@ -34,13 +34,11 @@ if (password):
     
     sessionState.keyPassword += 1 # Reset the input field
 
-
 # Jump to trial
 jumpTo = st.sidebar.text_input('Jump to Trial', key = sessionState.keyJump)
 if (jumpTo):
     sessionState.indexImage = int(jumpTo)
     sessionState.keyJump += 1 # Reset the input field
-
 
 # The data
 df = pd.DataFrame(
