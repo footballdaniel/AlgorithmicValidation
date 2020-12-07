@@ -1,7 +1,18 @@
 import glob
 import ffmpeg
 import os
+from pathlib import Path
 import numpy as np
+import pyminizip
+
+for file in glob.glob('_output/*.jpeg'):
+    print(file)
+    basename = Path(file).stem
+    targetPath = '../data/' + basename + ".zip"
+    pyminizip.compress(file, None, targetPath , "pw", 0)
+    a = 1
+
+
 
 # Import the cutoffs points for the videos
 cutoffs = np.genfromtxt(
@@ -64,7 +75,8 @@ for file in glob.glob('_input/*.mp4'):
         '_output/' + fileTag + '_%03d.jpeg', # For image output
         **{'loglevel': 0}, # Prevent any logs from ffmpeg
         start_number = frameStart,
-        r=1
+        r=1, # Replay rate constant
+        qscale=10 # Make files lower quality. Argument takes values between [10 31]
     )
 
     # If the file exists, simply overwrite it (using '-y')
@@ -74,4 +86,5 @@ for file in glob.glob('_input/*.mp4'):
     print(stream.get_args()) # Debug what ffmpeg does
     stream.run() # If it doesnt run, consult: https://github.com/kkroening/ffmpeg-python/issues/165
 
-    a = 1
+# To zip the file use a subprocess with
+'zip -P PASSWORD ../data/frames.zip -r .'
