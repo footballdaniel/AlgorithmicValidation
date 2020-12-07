@@ -1,3 +1,1 @@
-python-opencv-headless
-freeglut3-dev
-libgtk2.0-dev
+python-opencv
