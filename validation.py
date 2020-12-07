@@ -5,6 +5,7 @@ import glob
 import cv2
 import SessionState
 import zipfile
+import tempfile
 
 # Persistent state variables
 # https://discuss.streamlit.io/t/how-can-i-create-a-app-to-explore-the-images-in-a-folder/5458/2
@@ -13,7 +14,14 @@ sessionState = SessionState.get(
     indexImage = 0,
     currentAoi = 0,
     keyPassword = 0, # If the key != 0, the input field is empty/disabled. see:
-    keyJump = 0) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
+    keyJump = 0,
+    tempFolder = "") # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
+
+# Create a session temporary folder if none has been defined
+if sessionState.tempFolder == "":
+    # Initiate a temporary directory
+    zipDir = tempfile.TemporaryDirectory()
+    sessionState.tempFolder = zipDir.name
 
 # Sidebar content:
 # Password authentication
@@ -30,7 +38,7 @@ if (password):
 
         z = zipfile.ZipFile(file)
         z.setpassword(pwd=bytes(password, 'utf-8'))
-        z.extractall('data/')
+        z.extractall(sessionState.tempFolder)
     
     sessionState.keyPassword += 1 # Reset the input field
 
@@ -53,7 +61,10 @@ st.title('Validation Gaze')
 st.text('This is the validation of the Pupil eye-tracker. It contains a total of 1600 frames.')
 
 # The images
-images = glob.glob('data/*.jpeg')
+# images = glob.glob('data/*.jpeg')
+images = glob.glob(sessionState.tempFolder + "\\*.jpeg")
+
+st.text(sessionState.tempFolder)
 
 # Two column buttons
 col1, col2= st.beta_columns(2)
