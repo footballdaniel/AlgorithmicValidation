@@ -31,7 +31,6 @@ if (password):
     progress_bar = st.sidebar.progress(0)
 
     for index, file in enumerate(glob.glob("data/*.zip")):
-    
         # Update progress bar
         nfiles = len(glob.glob("data/*.zip"))
         progress_bar.progress(((index+1)/nfiles))
@@ -62,7 +61,9 @@ st.text('This is the validation of the Pupil eye-tracker. It contains a total of
 
 # The images
 # images = glob.glob('data/*.jpeg')
-images = glob.glob(sessionState.tempFolder + "\\*.jpeg")
+images = glob.glob(sessionState.tempFolder + "/*.jpeg")
+
+st.text(images)
 
 st.text(sessionState.tempFolder)
 
