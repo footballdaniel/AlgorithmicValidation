@@ -44,6 +44,9 @@ if (password):
     
     sessionState.keyPassword += 1 # Reset the input field
 
+# username
+username = st.sidebar.text_input("Enter your first name")
+
 # Jump to trial
 jumpTo = st.sidebar.text_input('Jump to Frame', key = sessionState.keyJump)
 if (jumpTo):
@@ -98,7 +101,8 @@ if images != []:
                 {
                     'Trial': currentTrial,
                     'Frame': currentFrame,
-                    'Label': sessionState.aoi
+                    'Label': sessionState.aoi,
+                    'Rater': username
                 }, 
                 ignore_index = True)
                 sessionState.indexImage -= 1
@@ -107,9 +111,10 @@ if images != []:
         if st.button('Next image'):
             sessionState.dataFrame = sessionState.dataFrame.append(
                 {
-                    'Label': sessionState.aoi,
+                    'Trial': currentTrial,
                     'Frame': currentFrame,
-                    'Trial': currentTrial
+                    'Label': sessionState.aoi,
+                    'Rater': username
                 }, 
                 ignore_index = True)
             sessionState.indexImage += 1
