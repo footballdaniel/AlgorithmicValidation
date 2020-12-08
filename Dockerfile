@@ -17,4 +17,4 @@ CMD streamlit run validation.py
 
 # To run locally https://maelfabien.github.io/project/Streamlit/#dockerfile
 # docker build -f Dockerfile -t algorithmicvalidation:latest .
-# docker run -p 8501:8501 algorithmicvalidation:latest
+# docker run -p 8000:800 algorithmicvalidation:latest
