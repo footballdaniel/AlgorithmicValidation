@@ -37,6 +37,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          repository: footballdaniel/algorithmicvalidation
+          repository: footballdaniel/algorithmicvalidation # This tag does not work. The package is posted to user.
           tags: ghcr.io/footballdaniel/algorithmicvalidation:latest
 
