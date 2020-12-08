@@ -1,7 +1,7 @@
 # Dockerfile to create a Docker image for the Streamlit app
 
 # Creates a layer from the python:3.8 Docker image
-FROM python:3.8
+FROM python:3.8-alpine
 
 # Copy all the files from the folders the Dockerfile is to the container root folder
 COPY . .
@@ -13,4 +13,8 @@ RUN pip3 install -r requirements.txt
 EXPOSE 8000
 
 # The command that run the app
-CMD streamlit run validate.py
+CMD streamlit run validation.py
+
+# To run locally https://maelfabien.github.io/project/Streamlit/#dockerfile
+# docker build -f Dockerfile -t algorithmicvalidation:latest .
+# docker run -p 8501:8501 algorithmicvalidation:latest
