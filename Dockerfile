@@ -1,6 +1,6 @@
 # Dockerfile to create a Docker image for the Streamlit app
 # Creates a layer from the python:3.8 Docker image
-FROM python:3.8-slim
+FROM python:3.8
 
 # Attach the package to a repository
 LABEL org.opencontainers.image.source https://github.com/footballdaniel/algorithmicvalidation
@@ -10,7 +10,6 @@ COPY . .
 
 # Install Opencv (https://stackoverflow.com/a/56490314)
 RUN apt update
-RUN apt-get install gcc
 RUN apt install -y libgl1-mesa-glx
 
 # Install the modules specified in the requirements.txt
