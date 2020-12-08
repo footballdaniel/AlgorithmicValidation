@@ -27,6 +27,9 @@ if sessionState.tempFolder == "":
     sessionState.tempFolder = zipDir.name
 
 # Sidebar content:
+# Logo
+st.sidebar.image('Logo.png')
+
 # Password authentication
 password = st.sidebar.text_input("Enter a password", type="password", key = sessionState.keyPassword)
 if (password):
@@ -54,17 +57,19 @@ if (jumpTo):
     sessionState.keyJump += 1 # Reset the input field
 
 # Start blank app
-st.title('Validation Gaze')
+st.title('Validation Algorithmic Gaze Detection')
 st.markdown("""
-This is the validation of an algorithmic analysis for the Pupil eye-tracker. It contains a total of 1595 frames.
-To start, fill in the password in the sidebar and hit `Enter`. Loading the images takes several minutes.
+This is the validation of an algorithmic analysis for the Pupil eye-tracker. It contains a total of 1594 frames.
+To start, fill in the password in the sidebar and hit `Enter`. Then, provide your first name and confirm with `Enter`.
+Loading the images takes several minutes.
 
 Please indicate for each frame, which AOI the gaze (green circle) is closest to. Use one of the eight AOI regions.
 The area `Right arm` is assigned when the gaze is on the right arm of the judoka (his/her right arm). 
 The area `Other` is for frames when the gaze lies outside of the judoka's body.
 
 The choice for the current frame is saved when either of the buttons (`Next image`, `Previous image`) is clicked.
-When finished, click the button `Download Results` to get the `CSV` file.
+When finished, click the button `Download Results` to get the `CSV` file. 
+It is good practice to download the results every 200 trials in case the app encounters an error.
 """)
 
 # The images
@@ -109,15 +114,19 @@ if images != []:
 
     with (col3):
         if st.button('Next image'):
-            sessionState.dataFrame = sessionState.dataFrame.append(
-                {
-                    'Trial': currentTrial,
-                    'Frame': currentFrame,
-                    'Label': sessionState.aoi,
-                    'Rater': username
-                }, 
-                ignore_index = True)
-            sessionState.indexImage += 1
+            if sessionState.indexImage < len(images) -1:
+                sessionState.dataFrame = sessionState.dataFrame.append(
+                    {
+                        'Trial': currentTrial,
+                        'Frame': currentFrame,
+                        'Label': sessionState.aoi,
+                        'Rater': username
+                    }, 
+                    ignore_index = True)
+                sessionState.indexImage += 1
+
+    # Display current index
+    st.text(f'current image index: {sessionState.indexImage}')
             
     # Display current image
     image = cv2.imread(images[int(sessionState.indexImage)])
@@ -134,6 +143,5 @@ if images != []:
         return f'<a href="data:file/txt;base64,{b64}" \
             download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
-    # Index and save
-    st.text(f'current image index: {sessionState.indexImage}')
+    # Save
     st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
