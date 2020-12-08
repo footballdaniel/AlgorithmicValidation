@@ -6,6 +6,7 @@ import cv2
 import SessionState
 import zipfile
 import tempfile
+import pathlib
 
 # Persistent state variables
 # https://discuss.streamlit.io/t/how-can-i-create-a-app-to-explore-the-images-in-a-folder/5458/2
@@ -16,6 +17,7 @@ sessionState = SessionState.get(
     keyPassword = 0, # If the key != 0, the input field is empty/disabled. see:
     keyJump = 0,
     tempFolder = "",
+    aoi = "",
     dataFrame = pd.DataFrame()) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
 
 # Create a session temporary folder if none has been defined
@@ -43,7 +45,7 @@ if (password):
     sessionState.keyPassword += 1 # Reset the input field
 
 # Jump to trial
-jumpTo = st.sidebar.text_input('Jump to Trial', key = sessionState.keyJump)
+jumpTo = st.sidebar.text_input('Jump to Frame', key = sessionState.keyJump)
 if (jumpTo):
     sessionState.indexImage = int(jumpTo)
     sessionState.keyJump += 1 # Reset the input field
@@ -59,6 +61,13 @@ images = sorted(glob.glob(sessionState.tempFolder + "/*.jpeg"))
 # The UI
 if images != []:
 
+    # Get the information from the images:
+    currentImage = images[int(sessionState.indexImage)]
+    currentImageName = pathlib.Path(currentImage).stem
+
+    currentFrame = currentImageName.split("_")[1]
+    currentTrial = currentImageName.split("_")[0]
+
     # st.text(images)
     st.text("Loaded temporarily to: " + sessionState.tempFolder)
 
@@ -68,15 +77,28 @@ if images != []:
     with (col1):
         if st.button('Previous image'):
             if sessionState.indexImage > 0:
+                sessionState.dataFrame = sessionState.dataFrame.append(
+                {
+                    'Trial': currentTrial,
+                    'Frame': currentFrame,
+                    'Label': sessionState.aoi
+                }, 
+                ignore_index = True)
                 sessionState.indexImage -= 1
 
     with (col2):
         if st.button('Next image'):
-            sessionState.dataFrame = sessionState.dataFrame.append({'Frame': images[int(sessionState.indexImage)]}, ignore_index = True)
+            sessionState.dataFrame = sessionState.dataFrame.append(
+                {
+                    'Label': sessionState.aoi,
+                    'Frame': currentFrame,
+                    'Trial': currentTrial
+                }, 
+                ignore_index = True)
             sessionState.indexImage += 1
 
     # AOI button
-    aoi = st.radio(
+    sessionState.aoi = st.radio(
         'Chose on which AOI gaze is currently', 
         ['Head', 'Chest', 'Pelvis', 'Left arm', 'Right arm', 'Left leg', 'Right leg', 'Other'],
         index = sessionState.currentAoi)
@@ -94,9 +116,8 @@ if images != []:
         csv = df.to_csv(index=False)
         b64 = base64.b64encode(csv.encode()).decode()  # strings/bytes conversions
         return f'<a href="data:file/txt;base64,{b64}" \
-            download="{csv}"><input type="button" value="Download Results"></a>'
+            download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
     # Index and save
     st.text(f'current image index: {sessionState.indexImage}')
     st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
-
