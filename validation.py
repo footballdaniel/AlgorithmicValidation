@@ -28,7 +28,7 @@ if sessionState.tempFolder == "":
 
 # Sidebar content:
 # Logo
-st.sidebar.image('Logo.png')
+st.sidebar.image('logo.png')
 
 # Password authentication
 password = st.sidebar.text_input("Enter a password", type="password", key = sessionState.keyPassword)
