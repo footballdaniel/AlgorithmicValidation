@@ -10,6 +10,7 @@ COPY . .
 
 # Install Opencv (https://stackoverflow.com/a/56490314)
 RUN apt update
+RUN apt-get install gcc
 RUN apt install -y libgl1-mesa-glx
 
 # Install the modules specified in the requirements.txt
