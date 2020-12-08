@@ -1,8 +1,7 @@
 # AlgorithmicValidation
 Validation for Algorithmic gaze analysis
 
-## Streamlit
-[The app is hosted here](https://share.streamlit.io/footballdaniel/algorithmicvalidation/main/validation.py)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/footballdaniel/algorithmicvalidation/main/validation.py)
 
 ## Dockerfile
 I used the procedure from [here](https://www.databentobox.com/2020/10/08/python-apps-with-docker/) to run the streamlit app in a docker container.
