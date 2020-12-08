@@ -20,7 +20,7 @@ sessionState = SessionState.get(
     aoi = "",
     dataFrame = pd.DataFrame()) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
 
-# Create a session temporary folder if none has been defined
+# Create a session temporary folder if none has been defined to store the extracted files from zip
 if sessionState.tempFolder == "":
     # Initiate a temporary directory
     zipDir = tempfile.TemporaryDirectory()
@@ -52,7 +52,17 @@ if (jumpTo):
 
 # Start blank app
 st.title('Validation Gaze')
-st.text('This is the validation of the Pupil eye-tracker. It contains a total of 1600 frames.')
+st.markdown("""
+This is the validation of an algorithmic analysis for the Pupil eye-tracker. It contains a total of 1595 frames.
+To start, fill in the password in the sidebar and hit `Enter`. Loading the images takes several minutes.
+
+Please indicate for each frame, which AOI the gaze (green circle) is closest to. Use one of the eight AOI regions.
+The area `Right arm` is assigned when the gaze is on the right arm of the judoka (his/her right arm). 
+The area `Other` is for frames when the gaze lies outside of the judoka's body.
+
+The choice for the current frame is saved when either of the buttons (`Next image`, `Previous image`) is clicked.
+When finished, click the button `Download Results` to get the `CSV` file.
+""")
 
 # The images
 # images = glob.glob('data/*.jpeg')
@@ -69,12 +79,19 @@ if images != []:
     currentTrial = currentImageName.split("_")[0]
 
     # st.text(images)
-    st.text("Loaded temporarily to: " + sessionState.tempFolder)
+    # st.text("Loaded temporarily to: " + sessionState.tempFolder)
 
     # Two column buttons
-    col1, col2= st.beta_columns(2)
+    col1, col2, col3 = st.beta_columns(3)
 
     with (col1):
+        sessionState.aoi = st.radio(
+            'Chose on which AOI gaze is currently', 
+            ['Head', 'Chest', 'Pelvis', 'Left arm', 'Right arm', 'Left leg', 'Right leg', 'Other'],
+            index = sessionState.currentAoi)
+
+
+    with (col2):
         if st.button('Previous image'):
             if sessionState.indexImage > 0:
                 sessionState.dataFrame = sessionState.dataFrame.append(
@@ -86,7 +103,7 @@ if images != []:
                 ignore_index = True)
                 sessionState.indexImage -= 1
 
-    with (col2):
+    with (col3):
         if st.button('Next image'):
             sessionState.dataFrame = sessionState.dataFrame.append(
                 {
@@ -96,16 +113,10 @@ if images != []:
                 }, 
                 ignore_index = True)
             sessionState.indexImage += 1
-
-    # AOI button
-    sessionState.aoi = st.radio(
-        'Chose on which AOI gaze is currently', 
-        ['Head', 'Chest', 'Pelvis', 'Left arm', 'Right arm', 'Left leg', 'Right leg', 'Other'],
-        index = sessionState.currentAoi)
-
+            
     # Display current image
     image = cv2.imread(images[int(sessionState.indexImage)])
-    st.image(image, use_column_width=True, channels = 'BGR')
+    st.image(image, use_column_width=True, channels = 'BGR')    
 
     # https://discuss.streamlit.io/t/how-to-download-file-in-streamlit/1806
     def get_table_download_link(df):

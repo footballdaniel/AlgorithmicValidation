@@ -5,15 +5,6 @@ from pathlib import Path
 import numpy as np
 import pyminizip
 
-for file in glob.glob('_output/*.jpeg'):
-    print(file)
-    basename = Path(file).stem
-    targetPath = '../data/' + basename + ".zip"
-    pyminizip.compress(file, None, targetPath , "pw", 0)
-    a = 1
-
-
-
 # Import the cutoffs points for the videos
 cutoffs = np.genfromtxt(
     'TimeStamps.csv', 
@@ -83,8 +74,14 @@ for file in glob.glob('_input/*.mp4'):
     stream = ffmpeg.overwrite_output(stream)
 
     # Run on file
-    print(stream.get_args()) # Debug what ffmpeg does
+    # print(stream.get_args()) # Debug what ffmpeg does as command line argument
     stream.run() # If it doesnt run, consult: https://github.com/kkroening/ffmpeg-python/issues/165
 
-# To zip the file use a subprocess with
-'zip -P PASSWORD ../data/frames.zip -r .'
+    # To zip the file manually use a subprocess with
+    'zip -P PASSWORD ../data/frames.zip -r .'
+
+# Finally, zip each file
+for file in glob.glob('_output/*.jpeg'):
+    basename = Path(file).stem
+    targetPath = '../data/' + basename + ".zip"
+    pyminizip.compress(file, None, targetPath , "david", 0)
