@@ -10,7 +10,7 @@ COPY . .
 RUN pip3 install -r requirements.txt
 
 # The port on which a container listens for connections
-EXPOSE 8000
+EXPOSE 8501
 
 # The command that run the app
 CMD streamlit run validation.py
