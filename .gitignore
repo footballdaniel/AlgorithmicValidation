@@ -1,10 +1,6 @@
 # Project specific ignores
 data/*
 !data/*.zip
-dataTransformation/_input/*
-dataTransformation/_output/*
-dataTransformation/test/*
-dataTransformation/virtualenv/*
 
 testing/*
 .vscode/

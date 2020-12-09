@@ -64,12 +64,12 @@ To start, fill in the password in the sidebar and hit `Enter`. Then, provide you
 Loading the images takes several minutes.
 
 Please indicate for each frame, which AOI the gaze (green circle) is closest to. Use one of the eight AOI regions.
-The area `Right arm` is assigned when the gaze is on the right arm of the judoka (his/her right arm). 
-The area `Other` is for frames when the gaze lies outside of the judoka's body.
+The area `Right arm` is assigned when the gaze is on the arm that is on the left side of the frame (i.e. the opponents' right arm).
+The area `Other` is for frames when the gaze lies outside of the judoka's body or when there is no green gaze target.
 
-The choice for the current frame is saved when either of the buttons (`Next image`, `Previous image`) is clicked.
+The choice for the current frame is saved when either the button `Next image` is clicked.
 When finished, click the button `Download Results` to get the `CSV` file. 
-It is good practice to download the results every 200 trials in case the app encounters an error.
+If the app stops working (no frame visible), download the results and restart the app. Jump to the frame where you left off.
 """)
 
 # The images
@@ -86,9 +86,6 @@ if images != []:
     currentFrame = currentImageName.split("_")[1]
     currentTrial = currentImageName.split("_")[0]
 
-    # st.text(images)
-    # st.text("Loaded temporarily to: " + sessionState.tempFolder)
-
     # Two column buttons
     col1, col2, col3 = st.beta_columns(3)
 
@@ -102,15 +99,6 @@ if images != []:
     with (col2):
         if st.button('Previous image'):
             if sessionState.indexImage > 0:
-                sessionState.dataFrame = sessionState.dataFrame.append(
-                {
-                    'Trial': currentTrial,
-                    'Frame': currentFrame,
-                    'Label': sessionState.aoi,
-                    'Rater': username,
-                    'CurrentIndex': sessionState.indexImage
-                }, 
-                ignore_index = True)
                 sessionState.indexImage -= 1
 
     with (col3):
@@ -127,23 +115,29 @@ if images != []:
                     ignore_index = True)
                 sessionState.indexImage += 1
 
-    # Display current index
-    st.text(f'current image index: {sessionState.indexImage}')
+
             
     # Display current image
     image = cv2.imread(images[int(sessionState.indexImage)])
     st.image(image, use_column_width=True, channels = 'BGR')    
 
-    # https://discuss.streamlit.io/t/how-to-download-file-in-streamlit/1806
-    def get_table_download_link(df):
-        """Generates a link allowing the data in a pandas dataframe to be downloaded
-        in:  dataframe
-        out: href string
-        """
-        csv = df.to_csv(index=False)
-        b64 = base64.b64encode(csv.encode()).decode()  # strings/bytes conversions
-        return f'<a href="data:file/txt;base64,{b64}" \
-            download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
+# https://discuss.streamlit.io/t/how-to-download-file-in-streamlit/1806
+def get_table_download_link(df):
+    """Generates a link allowing the data in a pandas dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # strings/bytes conversions
+    return f'<a href="data:file/txt;base64,{b64}" \
+        download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
-    # Save
+# If there is data to download
+if (len(sessionState.dataFrame) > 0):
     st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
+
+    # Display current index
+    st.text(f'Worked until frame number: {sessionState.indexImage}')
+
+    # Debug
+    st.text("Targeting currently: " + sessionState.tempFolder)
