@@ -107,7 +107,8 @@ if images != []:
                     'Trial': currentTrial,
                     'Frame': currentFrame,
                     'Label': sessionState.aoi,
-                    'Rater': username
+                    'Rater': username,
+                    'CurrentIndex': sessionState.indexImage
                 }, 
                 ignore_index = True)
                 sessionState.indexImage -= 1
@@ -120,7 +121,8 @@ if images != []:
                         'Trial': currentTrial,
                         'Frame': currentFrame,
                         'Label': sessionState.aoi,
-                        'Rater': username
+                        'Rater': username,
+                        'CurrentIndex': sessionState.indexImage
                     }, 
                     ignore_index = True)
                 sessionState.indexImage += 1
