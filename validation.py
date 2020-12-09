@@ -11,6 +11,7 @@ import pathlib
 # Persistent state variables
 # https://discuss.streamlit.io/t/how-can-i-create-a-app-to-explore-the-images-in-a-folder/5458/2
 # https://discuss.streamlit.io/t/is-there-any-working-example-for-session-state-for-streamlit-version-0-63-1/4551
+# Improved: https://discuss.streamlit.io/t/alternative-implementation-of-session-state/799/21
 sessionState = SessionState.get(
     indexImage = 0,
     currentAoi = 0,
@@ -66,10 +67,12 @@ Loading the images takes several minutes.
 Please indicate for each frame, which AOI the gaze (green circle) is closest to. Use one of the eight AOI regions.
 The area `Right arm` is assigned when the gaze is on the arm that is on the left side of the frame (i.e. the opponents' right arm).
 The area `Other` is for frames when the gaze lies outside of the judoka's body or when there is no green gaze target.
+For some frames, there are two green gaze circles visible. This is when Pupil could not identify a binocular point of view.
 
 The choice for the current frame is saved when either the button `Next image` is clicked.
 When finished, click the button `Download Results` to get the `CSV` file. 
-If the app stops working (no frame visible), download the results and restart the app. Jump to the frame where you left off.
+Please save the results every 200 frames. If the app crashes (suddenly no frames are displayed), restart the app and 
+jump to the frame where you left off.
 """)
 
 # The images
@@ -115,8 +118,6 @@ if images != []:
                     ignore_index = True)
                 sessionState.indexImage += 1
 
-
-            
     # Display current image
     image = cv2.imread(images[int(sessionState.indexImage)])
     st.image(image, use_column_width=True, channels = 'BGR')    
@@ -133,11 +134,12 @@ def get_table_download_link(df):
         download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
 # If there is data to download
-if (len(sessionState.dataFrame) > 0):
-    st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
+# if (len(sessionState.dataFrame) > 0):
+st.text("")
+st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
 
-    # Display current index
-    st.text(f'Worked until frame number: {sessionState.indexImage}')
+# Display current index
+st.text(f'Worked until frame number: {sessionState.indexImage}')
 
-    # Debug
-    st.text("Targeting currently: " + sessionState.tempFolder)
+# Debug
+st.text("Targeting currently: " + sessionState.tempFolder)
