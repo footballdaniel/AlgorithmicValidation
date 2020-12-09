@@ -71,7 +71,7 @@ For some frames, there are two green gaze circles visible. This is when Pupil co
 
 The choice for the current frame is saved when either the button `Next image` is clicked.
 When finished, click the button `Download Results` to get the `CSV` file. 
-Please save the results every 200 frames. If the app crashes (suddenly no frames are displayed), restart the app and 
+Please save the results after every trial. If the app crashes (suddenly no frames are displayed), restart the app and 
 jump to the frame where you left off.
 """)
 
@@ -139,7 +139,7 @@ st.text("")
 st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
 
 # Display current index
-st.text(f'Worked until frame number: {sessionState.indexImage}')
+st.text(f'Results available for {sessionState.indexImage} frames')
 
 # Debug
 st.text("Targeting currently: " + sessionState.tempFolder)
