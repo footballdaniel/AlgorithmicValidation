@@ -67,12 +67,13 @@ Loading the images takes several minutes.
 Please indicate for each frame, which AOI the gaze (green circle) is closest to. Use one of the eight AOI regions.
 The area `Right arm` is assigned when the gaze is on the arm that is on the left side of the frame (i.e. the opponents' right arm).
 The area `Other` is for frames when the gaze lies outside of the judoka's body or when there is no green gaze target.
+The area `Head` is for frames when the gaze lies on the head, not when the gaze is on the neck. The neck is part of the `Chest`.
 For some frames, there are two green gaze circles visible. This is when Pupil could not identify a binocular point of view.
 
 The choice for the current frame is saved when either the button `Next image` is clicked.
 When finished, click the button `Download Results` to get the `CSV` file. 
-Please save the results after every trial. If the app crashes (suddenly no frames are displayed), restart the app and 
-jump to the frame where you left off.
+Please save the results after each trial. 
+If the app crashes (suddenly no frames are displayed), restart the app and jump to the frame where you left off.
 """)
 
 # The images
