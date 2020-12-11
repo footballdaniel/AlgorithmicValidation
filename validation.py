@@ -1,3 +1,4 @@
+from collections import defaultdict
 import streamlit as st
 import pandas as pd
 import base64
@@ -6,6 +7,7 @@ import cv2
 import zipfile
 import tempfile
 import pathlib
+from dataclasses import dataclass, field
 
 # Persistent state variables
 # https://discuss.streamlit.io/t/how-can-i-create-a-app-to-explore-the-images-in-a-folder/5458/2
@@ -20,30 +22,23 @@ import pathlib
 #     aoi = "",
 #     dataFrame = pd.DataFrame()) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
 
+@dataclass
 class Session:
-    indexImage = 0
-    currentAoi = 0
-    keyPassword = 0
-    correctPassword = False
-    keyJump = 0
-    tempFolder = ""
-    aoi = ""
-    dataFrame = pd.DataFrame()
-    pass
+    user: str = ""
+    indexImage: int = 0
+    currentAoi: int = 0
+    keyPassword: int = 0
+    correctPassword: bool = False
+    keyJump: int = 0
+    tempFolder: int = ""
+    aoi: str = ""
+    dataFrame: pd.DataFrame = pd.DataFrame()
 
+# Neat, whenever a new username is used, it creates a corresponding session!
 @st.cache(allow_output_mutation=True)
-def fetch_session():
-    session = Session()
+def fetch_session(user):
+    session = Session(user)
     return session
-
-# Alternative session state
-sessionState = fetch_session()
-
-# Create a session temporary folder if none has been defined to store the extracted files from zip
-if sessionState.tempFolder == "":
-    # Initiate a temporary directory
-    zipDir = tempfile.TemporaryDirectory()
-    sessionState.tempFolder = zipDir.name
 
 # Sidebar content:
 # Logo
@@ -52,8 +47,17 @@ st.sidebar.image('logo.png')
 # username
 username = st.sidebar.text_input("Enter your first name")
 
+# Create state for the user!
+sessionState = fetch_session(username)
+    
 # Password authentication
 password = st.sidebar.text_input("Enter a password", type="password", key = sessionState.keyPassword)
+
+# Create a session temporary folder if none has been defined to store the extracted files from zip
+if sessionState.tempFolder == "":
+    # Initiate a temporary directory
+    zipDir = tempfile.TemporaryDirectory()
+    sessionState.tempFolder = zipDir.name
 
 if (password):
     # Initiate a progress bar
@@ -72,7 +76,7 @@ if (password):
             sessionState.correctPassword = True
     except:
         st.warning("Bad password")
-    
+
     sessionState.keyPassword += 1 # Reset the input field
 
 if sessionState.keyPassword == 0:
@@ -145,7 +149,7 @@ if (sessionState.correctPassword):
                         ignore_index = True)
 
                     # Save as df
-                    sessionState.dataFrame.to_csv("results.csv")
+                    # sessionState.dataFrame.to_csv("results.csv")
                     sessionState.indexImage += 1
 
         # Display current image
@@ -160,7 +164,9 @@ if (sessionState.correctPassword):
             """
             # csv = df.to_csv(index=False)
             csv = open("results.csv", 'rb').read()
-            b64 = base64.b64encode(csv).decode('UTF-8')  # strings/bytes conversions
+            csv = sessionState.dataFrame.to_csv(index=False)
+            b64 = base64.b64encode(csv.encode()).decode()
+            # b64 = base64.b64encode(csv).decode('UTF-8')  # strings/bytes conversions
             return f'<a href="data:file/txt;base64,{b64}" \
                 download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
