@@ -126,25 +126,25 @@ if images != []:
     image = cv2.imread(images[int(sessionState.indexImage)])
     st.image(image, use_column_width=True, channels = 'BGR')    
 
-# https://discuss.streamlit.io/t/how-to-download-file-in-streamlit/1806
-def get_table_download_link(df):
-    """Generates a link allowing the data in a pandas dataframe to be downloaded
-    in:  dataframe
-    out: href string
-    """
-    # csv = df.to_csv(index=False)
-    csv = open("results.csv", 'rb').read()
-    b64 = base64.b64encode(csv).decode('UTF-8')  # strings/bytes conversions
-    return f'<a href="data:file/txt;base64,{b64}" \
-        download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
+    # https://discuss.streamlit.io/t/how-to-download-file-in-streamlit/1806
+    def get_table_download_link(df):
+        """Generates a link allowing the data in a pandas dataframe to be downloaded
+        in:  dataframe
+        out: href string
+        """
+        # csv = df.to_csv(index=False)
+        csv = open("results.csv", 'rb').read()
+        b64 = base64.b64encode(csv).decode('UTF-8')  # strings/bytes conversions
+        return f'<a href="data:file/txt;base64,{b64}" \
+            download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
-# If there is data to download
-# if (len(sessionState.dataFrame) > 0):
-st.text("")
-st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
+    # If there is data to download
+    # if (len(sessionState.dataFrame) > 0):
+    st.text("")
+    st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
 
-# Display current index
-st.text(f'The last frame clicked is: {sessionState.dataFrame.index[sessionState.indexImage-1]}')
+    # Display current index
+    st.text(f'The last frame clicked is: {sessionState.dataFrame.index[sessionState.indexImage-1]}')
 
-# # Debug
-# st.text("Targeting currently: " + sessionState.tempFolder)
+    # # Debug
+    # st.text("Targeting currently: " + sessionState.tempFolder)
