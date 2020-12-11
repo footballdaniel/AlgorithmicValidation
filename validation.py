@@ -31,6 +31,9 @@ if sessionState.tempFolder == "":
 # Logo
 st.sidebar.image('logo.png')
 
+# username
+username = st.sidebar.text_input("Enter your first name")
+
 # Password authentication
 password = st.sidebar.text_input("Enter a password", type="password", key = sessionState.keyPassword)
 if (password):
@@ -47,9 +50,6 @@ if (password):
         z.extractall(sessionState.tempFolder)
     
     sessionState.keyPassword += 1 # Reset the input field
-
-# username
-username = st.sidebar.text_input("Enter your first name")
 
 # Jump to trial
 jumpTo = st.sidebar.text_input('Jump to Frame', key = sessionState.keyJump)
@@ -116,6 +116,10 @@ if images != []:
                         'CurrentIndex': sessionState.indexImage
                     }, 
                     ignore_index = True)
+
+                # Save as df
+                sessionState.dataFrame.to_csv("results.csv")
+
                 sessionState.indexImage += 1
 
     # Display current image
@@ -128,8 +132,9 @@ def get_table_download_link(df):
     in:  dataframe
     out: href string
     """
-    csv = df.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()  # strings/bytes conversions
+    # csv = df.to_csv(index=False)
+    csv = open("results.csv", 'rb').read()
+    b64 = base64.b64encode(csv).decode('UTF-8')  # strings/bytes conversions
     return f'<a href="data:file/txt;base64,{b64}" \
         download="{"Results.csv"}"><input type="button" value="Download Results"></a>'
 
@@ -139,7 +144,7 @@ st.text("")
 st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
 
 # Display current index
-st.text(f'Results available for {sessionState.indexImage} frames')
+st.text(f'The last frame clicked is: {sessionState.dataFrame.index[sessionState.indexImage-1]}')
 
-# Debug
-st.text("Targeting currently: " + sessionState.tempFolder)
+# # Debug
+# st.text("Targeting currently: " + sessionState.tempFolder)

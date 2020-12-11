@@ -1,6 +1,7 @@
 # Project specific ignores
 data/*
 !data/*.zip
+results.csv
 
 testing/*
 .vscode/
