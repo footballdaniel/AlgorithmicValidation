@@ -3,7 +3,6 @@ import pandas as pd
 import base64
 import glob
 import cv2
-import SessionState
 import zipfile
 import tempfile
 import pathlib
@@ -12,14 +11,32 @@ import pathlib
 # https://discuss.streamlit.io/t/how-can-i-create-a-app-to-explore-the-images-in-a-folder/5458/2
 # https://discuss.streamlit.io/t/is-there-any-working-example-for-session-state-for-streamlit-version-0-63-1/4551
 # Improved: https://discuss.streamlit.io/t/alternative-implementation-of-session-state/799/21
-sessionState = SessionState.get(
-    indexImage = 0,
-    currentAoi = 0,
-    keyPassword = 0, # If the key != 0, the input field is empty/disabled. see:
-    keyJump = 0,
-    tempFolder = "",
-    aoi = "",
-    dataFrame = pd.DataFrame()) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
+# sessionState = SessionState.get(
+#     indexImage = 0,
+#     currentAoi = 0,
+#     keyPassword = 0, # If the key != 0, the input field is empty/disabled. see:
+#     keyJump = 0,
+#     tempFolder = "",
+#     aoi = "",
+#     dataFrame = pd.DataFrame()) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
+
+class Session:
+    indexImage = 0
+    currentAoi = 0
+    keyPassword = 0
+    keyJump = 0
+    tempFolder = ""
+    aoi = ""
+    dataFrame = pd.DataFrame()
+    pass
+
+@st.cache(allow_output_mutation=True)
+def fetch_session():
+    session = Session()
+    return session
+
+# Alternative session state
+sessionState = fetch_session()
 
 # Create a session temporary folder if none has been defined to store the extracted files from zip
 if sessionState.tempFolder == "":
