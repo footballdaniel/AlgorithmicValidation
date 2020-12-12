@@ -7,59 +7,46 @@ import cv2
 import zipfile
 import tempfile
 import pathlib
-from dataclasses import dataclass, field
-
-# Persistent state variables
-# https://discuss.streamlit.io/t/how-can-i-create-a-app-to-explore-the-images-in-a-folder/5458/2
-# https://discuss.streamlit.io/t/is-there-any-working-example-for-session-state-for-streamlit-version-0-63-1/4551
-# Improved: https://discuss.streamlit.io/t/alternative-implementation-of-session-state/799/21
-# sessionState = SessionState.get(
-#     indexImage = 0,
-#     currentAoi = 0,
-#     keyPassword = 0, # If the key != 0, the input field is empty/disabled. see:
-#     keyJump = 0,
-#     tempFolder = "",
-#     aoi = "",
-#     dataFrame = pd.DataFrame()) # https://github.com/streamlit/streamlit/issues/623#issuecomment-551755236
+from dataclasses import dataclass
 
 @dataclass
 class Session:
     user: str = ""
+    password: str = ""
     indexImage: int = 0
     currentAoi: int = 0
-    keyPassword: int = 0
     correctPassword: bool = False
     keyJump: int = 0
     tempFolder: int = ""
     aoi: str = ""
     dataFrame: pd.DataFrame = pd.DataFrame()
 
-# Neat, whenever a new username is used, it creates a corresponding session!
+# Whenever fetch_session() is called with new input, the Session is saved for the user
 @st.cache(allow_output_mutation=True)
-def fetch_session(user):
-    session = Session(user)
+def fetch_session(user, password):
+    session = Session(user, password)
     return session
 
 # Sidebar content:
-# Logo
 st.sidebar.image('logo.png')
 
-# username
+# Login cache
 username = st.sidebar.text_input("Enter your first name")
+password = st.sidebar.text_input("Enter the password", type="password")
 
 # Create state for the user!
-sessionState = fetch_session(username)
+sessionState = fetch_session(username, password)
     
 # Password authentication
-password = st.sidebar.text_input("Enter a password", type="password", key = sessionState.keyPassword)
+login = st.sidebar.button("Login")
 
-# Create a session temporary folder if none has been defined to store the extracted files from zip
-if sessionState.tempFolder == "":
-    # Initiate a temporary directory
-    zipDir = tempfile.TemporaryDirectory()
-    sessionState.tempFolder = zipDir.name
+if (login):
+    # Create a session temporary folder if none has been defined to store the extracted files from zip
+    if sessionState.tempFolder == "":
+        # Initiate a temporary directory
+        zipDir = tempfile.TemporaryDirectory()
+        sessionState.tempFolder = zipDir.name
 
-if (password):
     # Initiate a progress bar
     progress_bar = st.sidebar.progress(0)
 
@@ -75,31 +62,25 @@ if (password):
 
             sessionState.correctPassword = True
     except:
-        st.warning("Bad password")
+        st.warning("Password not correct")
+        sessionState.correctPassword = False
 
-    sessionState.keyPassword += 1 # Reset the input field
-
-if sessionState.keyPassword == 0:
-# Start blank app
+if not sessionState.correctPassword:
+    # Start blank app
     st.title('Validation Algorithmic Gaze Detection')
     st.markdown("""
     This is the validation of an algorithmic analysis for the Pupil eye-tracker. It contains a total of 1594 frames.
-    To start, fill in the password in the sidebar and hit `Enter`. Then, provide your first name and confirm with `Enter`.
-    Loading the images takes several minutes.
 
-    Please indicate for each frame, which AOI the gaze (green circle) is closest to. Use one of the eight AOI regions.
+    Please indicate for each frame, which AOI the gaze (green circle) is on. Use one of the eight AOI regions.
     The area `Right arm` is assigned when the gaze is on the arm that is on the left side of the frame (i.e. the opponents' right arm).
     The area `Other` is for frames when the gaze lies outside of the judoka's body or when there is no green gaze target.
     For some frames, there are two green gaze circles visible. This is when Pupil could not identify a binocular point of view.
 
     The choice for the current frame is saved when either the button `Next image` is clicked.
-    When finished, click the button `Download Results` to get the `CSV` file. 
-    If the app crashes (suddenly no frames are displayed), restart the app and 
-    jump to the frame where you left off.
+    When finished, click the button `Download Results` to get the `CSV` file.
     """)
 
-if (sessionState.correctPassword):
-
+if sessionState.correctPassword:
     # Jump to trial
     jumpTo = st.sidebar.text_input('Jump to Frame', key = sessionState.keyJump)
     if (jumpTo):
@@ -107,7 +88,6 @@ if (sessionState.correctPassword):
         sessionState.keyJump += 1 # Reset the input field
 
     # The images
-    # images = glob.glob('data/*.jpeg')
     images = sorted(glob.glob(sessionState.tempFolder + "/*.jpeg"))
 
     # The UI
@@ -128,7 +108,6 @@ if (sessionState.correctPassword):
                 'Chose on which AOI gaze is currently', 
                 ['Head', 'Chest', 'Pelvis', 'Left arm', 'Right arm', 'Left leg', 'Right leg', 'Other'],
                 index = sessionState.currentAoi)
-
 
         with (col2):
             if st.button('Previous image'):
@@ -173,21 +152,8 @@ if (sessionState.correctPassword):
         # If there is data to download
         if (len(sessionState.dataFrame) > 0):
 
-            # col4, col5, = st.beta_columns(2)
-
-            with (col3):
-                logout = st.button('Logout')
-                if (logout):
-                    sessionState.correctPassword = 0
-
-
-
-
             st.text("")
             st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
 
             # Display current index
             st.text(f'The last frame clicked is: {sessionState.dataFrame.index[sessionState.indexImage-1]}')
-
-            # # Debug
-            # st.text("Targeting currently: " + sessionState.tempFolder)
