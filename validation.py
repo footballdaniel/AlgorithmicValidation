@@ -120,7 +120,7 @@ if (sessionState.correctPassword):
         currentFrame = currentImageName.split("_")[1]
         currentTrial = currentImageName.split("_")[0]
 
-        # Two column buttons
+        # Three columns for buttons
         col1, col2, col3 = st.beta_columns(3)
 
         with (col1):
@@ -172,6 +172,17 @@ if (sessionState.correctPassword):
 
         # If there is data to download
         if (len(sessionState.dataFrame) > 0):
+
+            # col4, col5, = st.beta_columns(2)
+
+            with (col3):
+                logout = st.button('Logout')
+                if (logout):
+                    sessionState.correctPassword = 0
+
+
+
+
             st.text("")
             st.markdown(get_table_download_link(sessionState.dataFrame), unsafe_allow_html=True)
 
