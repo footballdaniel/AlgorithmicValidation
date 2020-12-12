@@ -122,8 +122,7 @@ if sessionState.correctPassword:
                             'Trial': currentTrial,
                             'Frame': currentFrame,
                             'Label': sessionState.aoi,
-                            'Rater': username,
-                            'CurrentIndex': sessionState.indexImage
+                            'Rater': username
                         }, 
                         ignore_index = True)
 
