@@ -1,4 +1,4 @@
-python-opencv--headless
+python-opencv --headless
 libsm6
 libxext6
 freeglut3-dev
