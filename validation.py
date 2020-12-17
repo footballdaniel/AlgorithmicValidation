@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import base64
 import glob
-import cv2
+from PIL import Image
 import zipfile
 import tempfile
 import pathlib
@@ -131,7 +131,7 @@ if sessionState.correctPassword:
                     sessionState.indexImage += 1
 
         # Display current image
-        image = cv2.imread(images[int(sessionState.indexImage)])
+        image = Image.open(images[int(sessionState.indexImage)])
         st.image(image, use_column_width=True, channels = 'BGR')    
 
         # https://discuss.streamlit.io/t/how-to-download-file-in-streamlit/1806
