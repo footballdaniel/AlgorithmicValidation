@@ -14,9 +14,9 @@ In a second step, I excluded the `Other` category from the analysis and reached 
 
 ## All AOI
 In the first plot you can see the AOI classification for all AOI's (inlucding `Other`!). The classification of the algorithm (left plot) is compared to the classification of the manual raters. 
-As you can see, the algorithm has classified many more frames as `Other` (about 35.9%) when compared to the manual raters (about 12.7%).
+As you can see, the algorithm has classified many more frames as `Other` (35.9%) when compared to the manual raters (about 12.7%).
 
-![Classification for all AOI (including Other)](plots/RaterComparison_All.svg)
+![Classification for all AOI including Other](plots/RaterComparison_All.svg)
 
 
 Why is it that the algorithm classified many more frames as `Other`? It is because the algorithmic classification is really strict when it comes to gaze points that lie outside of the human body (just one pixel away from the human gist is enough). To show this, I looked at all the frames where the algorithm judged `Other` and separately also at all the frames where any human rater judged `Other`
@@ -50,7 +50,7 @@ When we look at all AOI, the agreement between the algorithm and the manual rati
 
 Since we are not interested in the `Other` AOI's, I think its fair to also calculate the agreement when we exclude the frames tagged as `Other`. 
 
-![Classification when gaze is on body (excluding) Other)](plots/RaterComparison_NoOther.svg)
+![Classification when gaze is on body, excluding Other)](plots/RaterComparison_NoOther.svg)
 
 Now the judgement of the algorithm and the manual raters are fairly comparable!
 
@@ -74,13 +74,16 @@ I looked deeper into the estimations of the neck anchor. Generally, we have to b
 With this said, I still looked cautiously into the frequency distributions. First, the (more trusthworthy) distributions when the interpersonal distances were > 1 m.
 I excluded all the `Other` frames, because we are not interested in the location of the gaze anchor when the judoka is not looking at the opponent.
 
-
 ![Frequency distribution when gaze is on Neck](plots/Neck_more1m.svg)
 ![Frequency distribution all frames except other](plots/All_AOI_more1m.svg)
 
 
-The anchor is visible clearest when we look at interpersonal distances > 1 m. Here are the plots of the closer fighting distance.
+The anchor is visible clearest when we look at interpersonal distances > 1 m. Here are the plots of the closer fighting distance:
 
 ![Frequency distribution when gaze is on Neck](plots/Neck_less1m.svg)
 ![Frequency distribution all frames except other](plots/All_AOI_less1m.svg)
 
+And finally the plots for all distances combined:
+
+![Frequency distribution when gaze is on Neck, all distances](plots/Neck_allDistances.svg)
+![Frequency distribution all frames except other, all distances](plots/All_AOI_allDistances.svg)
