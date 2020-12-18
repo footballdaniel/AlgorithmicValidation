@@ -5,7 +5,7 @@
 <!-- http://john-uebersax.com/stat/agree.htm -->
 
 ## Procedure
-I used the [online validation](https://share.streamlit.io/footballdaniel/algorithmicvalidation/main/validation.py) to compare the algorithmic classification against three manual raters. The comparison consists of 1595 frames that all raters clicked through.
+I used the [online validation](https://share.streamlit.io/footballdaniel/algorithmicvalidation/main/validation.py) to compare the algorithmic classification against three manual raters.
 I analyzed the percent viewing time and the inter-rater reliability (Kappa scores).
 First, I performed a preliminary analysis where I included all AOI's. It turns out the algorithm is more conservative when the gaze is outsie of the human body. The algorithm judges more frames as `Other`, which leads to a low agreement.
 
@@ -13,11 +13,10 @@ In a second step, I excluded the `Other` category from the analysis and reached 
 
 
 ## All AOI
-
 In the first plot you can see the AOI classification for all AOI's (inlucding `Other`!). The classification of the algorithm (left plot) is compared to the classification of the manual raters. 
-As you can see, the algorithm has classified many more frames as `Other` (about 35%) when compared to the manual raters (about 15%).
+As you can see, the algorithm has classified many more frames as `Other` (about 35.9%) when compared to the manual raters (about 12.7%).
 
-![Classification for all AOI (including Other)](plots/RaterComparison.svg)
+![Classification for all AOI (including Other)](plots/RaterComparison_All.svg)
 
 
 Why is it that the algorithm classified many more frames as `Other`? It is because the algorithmic classification is really strict when it comes to gaze points that lie outside of the human body (just one pixel away from the human gist is enough). To show this, I looked at all the frames where the algorithm judged `Other` and separately also at all the frames where any human rater judged `Other`
@@ -49,33 +48,39 @@ When we look at all AOI, the agreement between the algorithm and the manual rati
 
 ## When gaze is on body (excluding Other)
 
+Since we are not interested in the `Other` AOI's, I think its fair to also calculate the agreement when we exclude the frames tagged as `Other`. 
 
-| Comparison                  | Percent agreement | Reliability |
-| --------------------------- | ----------------- | ----------- |
-| Rater 1 vs. Algorithm       | 86.4%             | 0.70 Cohens Kappa |
-| Rater 2 vs. Algorithm       | 71.7%             | 0.50 Cohens Kappa |
-| Rater 3 vs. Algorithm       | 80.6%             | 0.61 Cohens Kappa |
-| Average Rater vs. Algorithm | 79.5% | 0.61 Cohens Kappa (Krippendorff) |
+![Classification when gaze is on body (excluding) Other)](plots/RaterComparison_NoOther.svg)
+
+Now the judgement of the algorithm and the manual raters are fairly comparable!
 
 
+| Comparison all AOI    |   Percent agreement [%] |   Reliability [Cohens Kappa] |
+|-----------------------|-------------------------|------------------------------|
+| Rater 1 vs. Algorithm |                   86.42 |                         0.70 |
+| Rater 2 vs. Algorithm |                   71.68 |                         0.50 |
+| Rater 3 vs. Algorithm |                   80.64 |                         0.61 |
+| Rater 1 vs. Rater 2   |                   79.77 |                         0.64 |
+| Rater 1 vs. Rater 3   |                   86.71 |                         0.73 |
+| Rater 2 vs. Rater 3   |                   75.00 |                         0.57 |
+| Among manual raters   |                   71.82 |                         0.61 (Krippendorff)|
+
+The agreement between the algorithm and the manual raters is on average 79.5% (mean of 86 + 71 + 80). The reliability between the manual raters and the algorithm is now as good as the reliability between the manual raters.
 
 ## Gaze anchor at neck
 
-I looked deeper into the estimations of the neck anchor. Generally, we have to be very careful not to over interpret this measure, because we **estimate** the gaze anchor by a **very rough 2D** approximation. Whenever the opponents arms and head were not in a 2D plane (this happens when they are very close), this results in a measurement error.
+I looked deeper into the estimations of the neck anchor. Generally, we have to be very careful not to over interpret this measure, because we **estimate** the gaze anchor by a **very rough 2D** approximation. Whenever the opponents arms and head were not in a 2D plane (this happens when they are very close), this results in a measurement error. The measure is definitely more trustworthy when the fighers were at a bigger distance from one another.
 
-With this said, I still looked cautiously into the frequency distributions, but this time only looked at interpersonal distances < 1 m. The results are very similar to the numbers I already mentioned in the email.
+With this said, I still looked cautiously into the frequency distributions. First, the (more trusthworthy) distributions when the interpersonal distances were > 1 m.
+I excluded all the `Other` frames, because we are not interested in the location of the gaze anchor when the judoka is not looking at the opponent.
 
 
+![Frequency distribution when gaze is on Neck](plots/Neck_more1m.svg)
+![Frequency distribution all frames except other](plots/All_AOI_more1m.svg)
 
-![Frequency distribution when gaze is on Neck](results/Fdist_Neck.png)
 
-The anchor is visible clearest when we look at interpersonal distances > 1 m. (For close distances, its just more noisy). You can see some outliers (values > 100 cm below head).
+The anchor is visible clearest when we look at interpersonal distances > 1 m. Here are the plots of the closer fighting distance.
 
-![Frequency distributions](results/Fdist.png)
-
-When we look again at interpersonal distances > 1 m but now at all AOI's, gaze is on average roughly 30 cm down from the head.
-
-Again, there is a bunch of measurement error in here. I think there is some general evidence that the gaze is on average about 22 cm (median) or 27 - 35 cm (mean) below the head.
-
-If you want to be conservative, the median value (22.3 cm) makes most sense to me.
+![Frequency distribution when gaze is on Neck](plots/Neck_less1m.svg)
+![Frequency distribution all frames except other](plots/All_AOI_less1m.svg)
 
