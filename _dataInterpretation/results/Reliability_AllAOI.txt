@@ -1,0 +1,9 @@
+| Comparison all AOI    |   Percent agreement [%] |   Reliability [Cohens Kappa] |
+|-----------------------|-------------------------|------------------------------|
+| Rater 1 vs. Algorithm |                   59.76 |                         0.39 |
+| Rater 2 vs. Algorithm |                   47.73 |                         0.27 |
+| Rater 3 vs. Algorithm |                   54.12 |                         0.33 |
+| Rater 1 vs. Rater 2   |                   77.86 |                         0.67 |
+| Rater 1 vs. Rater 3   |                   80.56 |                         0.70 |
+| Rater 2 vs. Rater 3   |                   75.34 |                         0.64 |
+| Among manual raters   |                   68.35 |                         0.63 |
