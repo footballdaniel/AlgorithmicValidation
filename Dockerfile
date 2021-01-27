@@ -8,10 +8,6 @@ LABEL org.opencontainers.image.source https://github.com/footballdaniel/algorith
 # Copy all the files from the folders the Dockerfile is to the container root folder
 COPY . .
 
-# Install Opencv (https://stackoverflow.com/a/56490314)
-RUN apt update
-RUN apt install -y libgl1-mesa-glx
-
 # Install the modules specified in the requirements.txt
 RUN pip3 install -r requirements.txt
 

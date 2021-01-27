@@ -28,7 +28,7 @@ def fetch_session(user, password):
     return session
 
 # Sidebar content:
-st.sidebar.image('resources/logo.png')
+st.sidebar.image('images/logo.png')
 
 # Login cache
 username = st.sidebar.text_input("Enter your first name")
