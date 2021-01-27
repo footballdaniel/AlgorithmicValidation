@@ -1,4 +1,4 @@
-name: Test
+name: Test data interpretation module
 
 on: [push, pull_request]
 
@@ -16,6 +16,7 @@ jobs:
       - name: Install dependencies with pipenv
         run: |
           pip install black pytest isort
+          pip install -r _dataInterpretation/dataInterpretation/requirements.txt
       
       - name: Unit tests
         run: |
