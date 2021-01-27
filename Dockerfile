@@ -1,6 +1,6 @@
 # Dockerfile to create a Docker image for the Streamlit app
 # Creates a layer from the python:3.8 Docker image
-FROM python:3.8
+FROM python:3.8-slim-buster
 
 # Attach the package to a repository
 LABEL org.opencontainers.image.source https://github.com/footballdaniel/algorithmicvalidation
@@ -18,4 +18,7 @@ EXPOSE 8501
 CMD streamlit run validation.py
 
 # To run locally https://maelfabien.github.io/project/Streamlit/#dockerfile
-# docker run -p 8501:8501 algorithmicvalidation:latest
+# docker pull ghcr.io/footballdaniel/algorithmicvalidation:latest
+# docker run --publish 8501:8501 ghcr.io/footballdaniel/algorithmicvalidation:latest
+# Page is visible under
+# http://localhost:8501/
