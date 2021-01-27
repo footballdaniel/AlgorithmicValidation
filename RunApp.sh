@@ -13,7 +13,7 @@ docker run --publish 8501:8501 --name algo -it ghcr.io/footballdaniel/algorithmi
 # Windows wait for port responding
 # while ! timeout 1 bash -c "echo > /dev/tcp/localhost:8501"; do sleep 1; done
 
-sleep 3
+sleep 5
 
 # Run in explorer
 case "$OSTYPE" in

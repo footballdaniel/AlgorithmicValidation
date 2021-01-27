@@ -5,6 +5,9 @@ FROM python:3.8-slim-buster
 # Attach the package to a repository
 LABEL org.opencontainers.image.source https://github.com/footballdaniel/algorithmicvalidation
 
+# Install some dependencies
+RUN apt-get update && apt-get -y install gcc
+
 # Copy all the files from the folders the Dockerfile is to the container root folder
 COPY . .
 
