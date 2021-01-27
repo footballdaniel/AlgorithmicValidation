@@ -1,0 +1,30 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies with pipenv
+        run: |
+          pip install black pytest isort
+      
+      - name: Unit tests
+        run: |
+          pytest _dataInterpretation/dataInterpretation
+
+      - name: Check imported modules
+        run: |
+          isort _dataInterpretation/dataInterpretation
+      
+      - name: Test code formatting
+        run: |
+          black --check _dataInterpretation/dataInterpretation
