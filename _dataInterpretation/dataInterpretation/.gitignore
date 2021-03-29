@@ -1,6 +1,5 @@
 # Avoid all local videos
 venv/
-plots/
 .vscode/
 
 # Byte-compiled / optimized / DLL files
