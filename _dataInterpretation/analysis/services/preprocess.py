@@ -6,7 +6,7 @@ from typing import List
 import pandas as pd  # type: ignore
 
 
-class DataPreprocessor(object):
+class DataPreprocessor:
     @property
     def algorithmic_data(self) -> pd.DataFrame:
         return self._algorithmic_data

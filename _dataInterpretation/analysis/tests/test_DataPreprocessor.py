@@ -1,6 +1,6 @@
 import pandas as pd
 
-from dataInterpretation.preprocess import DataPreprocessor
+from analysis.services.preprocess import DataPreprocessor
 
 
 def test_IsDuplicateFrameDiscarded():

@@ -1,7 +1,7 @@
 # All data analysis for the algorithmic validation
 
-from dataInterpretation.analysis import RatingAgreement
-from dataInterpretation.preprocess import DataPreprocessor
+from analysis.services.analysis import RatingAgreement
+from analysis.services.preprocess import DataPreprocessor
 
 data = DataPreprocessor()
 data.load(algorithmic_data="data/P*.txt", rater_data="data/data_Rater*.csv")

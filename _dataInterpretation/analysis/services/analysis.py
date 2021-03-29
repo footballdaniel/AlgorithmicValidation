@@ -1,4 +1,4 @@
-from dataInterpretation.preprocess import DataPreprocessor
+from analysis.services.preprocess import DataPreprocessor
 
 
 class RatingAgreement(object):
