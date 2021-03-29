@@ -1,4 +1,4 @@
-from __future__ import annotations  # Fix to type hint class itself
+from __future__ import annotations
 
 from glob import glob
 from typing import List
