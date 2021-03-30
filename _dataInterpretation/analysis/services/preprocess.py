@@ -1,10 +1,71 @@
 from __future__ import annotations  # Fix to type hint class itself
 
+from dataclasses import dataclass, field
 from glob import glob
 from typing import List
 
 import pandas as pd  # type: ignore
 
+from analysis.model.model import Dataset, NullDataset
+
+@dataclass
+class DataSerializer:
+    _algorithmic_aoi: List[str] = field(default_factory=list)
+    _algorithmic_trial: List[str] = field(default_factory=list)
+
+    def load(self, algorithmic_data: str, rater_data: str) -> Dataset:
+        self._load_algorithmic_data(algorithmic_data)
+        self._load_rater_data(rater_data)
+
+        dataset = NullDataset()
+        return dataset
+
+    def _load_algorithmic_data(self, file_pattern: str = "data/P*.txt") -> None:
+        file_reader = AlgorithmicFileReader(file_pattern)
+        file_reader.read()
+
+        self._algorithmic_aoi = file_reader.aoi
+        self._algorithmic_trial = file_reader.trial_id
+        self._algorithmic_frame = file_reader.frame_id
+
+    def _load_rater_data(self, file_pattern: str = "data/data_*.csv") -> None:
+        pass
+        a = 1
+
+@dataclass
+class RaterFileReader:
+    file_pattern: str
+
+    @property
+
+
+@dataclass
+class AlgorithmicFileReader:
+    file_path: str
+    _trial_id: List[str] = field(default_factory=list)
+    _aoi: List[str] = field(default_factory=list)
+    _frame_id: List[int] = field(default_factory=list)
+
+    @property
+    def trial_id(self) -> List[str]:
+        return self._trial_id
+
+    @property
+    def aoi(self) -> List[str]:
+        return self._aoi
+
+    @property
+    def frame_id (self) -> List[int]:
+        return self._frame_id
+
+    def read(self) -> None:
+        file_list = glob(self.file_path)
+        dataframe_list = (pd.read_csv(f, header=None, dtype=str) for f in file_list)
+        dataframe = pd.concat(dataframe_list, ignore_index=False, axis=0)
+
+        self._trial_id = list(dataframe.iloc[:, 0])
+        self._aoi = list(dataframe.iloc[:, 1])
+        self._frame_id = dataframe.index
 
 class DataPreprocessor:
     @property
@@ -14,6 +75,7 @@ class DataPreprocessor:
     @property
     def rater_data(self) -> pd.DataFrame:
         return self._algorithmic_data
+
 
     def load(self, algorithmic_data: str, rater_data: str) -> None:
         self._load_algorithmic_data(algorithmic_data)
@@ -41,9 +103,5 @@ class DataPreprocessor:
     def _columns_exist_in_dataframe(self, columns: List[str]) -> bool:
         if set(columns).issubset(self._rater_data):
             return True
-
-    def format(self) -> DataPreprocessor:
-        pass
-
-    def merge(self):
-        pass
+        else:
+            return False

@@ -1,11 +1,9 @@
-import pandas as pd
+import pandas as pd  # type: ignore
 
 from analysis.services.preprocess import DataPreprocessor
 
 
-def test_IsDuplicateFrameDiscarded():
-
-    # Arange
+def test_IsDuplicateFrameDiscarded() -> None:
     dp = DataPreprocessor()
     dp._rater_data = pd.DataFrame(
         {
@@ -15,17 +13,10 @@ def test_IsDuplicateFrameDiscarded():
             "Trial": [1, 1, 1, 1],
         }
     )
-
-    # Act
     dp.drop_duplicate_ratings(columns=["Rater", "Trial", "Frame"])
-
-    # Assert
     assert dp._rater_data.shape[0] == 3
 
-
-def test_NoDuplicatesToRemove():
-
-    # Arange
+def test_NoDuplicatesToRemove() -> None:
     dp = DataPreprocessor()
     dp._rater_data = pd.DataFrame(
         {
@@ -33,17 +24,10 @@ def test_NoDuplicatesToRemove():
             "Label": ["Head", "Head", "Nose", "Nose"],
         }
     )
-
-    # Act
     dp.drop_duplicate_ratings(columns=["Rater", "Trial", "Frame"])
-
-    # Assert
     assert dp._rater_data.shape[0] == 4
 
-
-def test_DuplicateFrameToRemove():
-
-    # Arange
+def test_DuplicateFrameToRemove() -> None:
     dp = DataPreprocessor()
     dp._rater_data = pd.DataFrame(
         {
@@ -58,9 +42,5 @@ def test_DuplicateFrameToRemove():
             "Trial": [1, 1, 1, 1],
         }
     )
-
-    # Act
     dp.drop_duplicate_ratings(columns=["Rater", "Trial", "Frame"])
-
-    # Assert
     assert dp._rater_data.shape[0] == 3
