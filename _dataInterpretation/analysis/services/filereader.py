@@ -11,7 +11,7 @@ class AlgorithmicFileReader:
     file_path: str
     _trial_id: List[str] = field(default_factory=list)
     _aoi: List[str] = field(default_factory=list)
-    _frame_id: List[int] = field(default_factory=list)
+    _frame_id: List[str] = field(default_factory=list)
 
     @property
     def trial_id(self) -> List[str]:
@@ -22,7 +22,7 @@ class AlgorithmicFileReader:
         return self._aoi
 
     @property
-    def frame_id(self) -> List[int]:
+    def frame_id(self) -> List[str]:
         return self._frame_id
 
     @property
@@ -35,7 +35,7 @@ class AlgorithmicFileReader:
         dataframe = pd.concat(dataframe_list, ignore_index=False, axis=0)
         self._trial_id = list(dataframe.iloc[:, 0])
         self._aoi = list(dataframe.iloc[:, 1])
-        self._frame_id = dataframe.index
+        self._frame_id = dataframe.index.map(str)
 
 
 @dataclass
@@ -44,7 +44,7 @@ class RaterFileReader:
     _trial_id: List[str] = field(default_factory=list)
     _rater_id: List[str] = field(default_factory=list)
     _aoi: List[str] = field(default_factory=list)
-    _frame_id: List[int] = field(default_factory=list)
+    _frame_id: List[str] = field(default_factory=list)
 
     @property
     def trial_id(self) -> List[str]:
@@ -55,7 +55,7 @@ class RaterFileReader:
         return self._aoi
 
     @property
-    def frame_id(self) -> List[int]:
+    def frame_id(self) -> List[str]:
         return self._frame_id
 
     @property
@@ -69,7 +69,7 @@ class RaterFileReader:
         self._trial_id = list(dataframe.iloc[:, 3])
         self._rater_id = list(dataframe.iloc[:, 2])
         self._aoi = list(dataframe.iloc[:, 1])
-        self._frame_id = list(dataframe.iloc[:, 0].astype(int))
+        self._frame_id = list(dataframe.iloc[:, 0])
 
     def drop_duplicate_ratings(self) -> None:
         frames_and_raters = zip(self.frame_id, self.rater_id)
