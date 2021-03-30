@@ -37,6 +37,14 @@ class AlgorithmicFileReader:
         self._aoi = list(dataframe.iloc[:, 1])
         self._frame_id = dataframe.index.map(str)
 
+    def rename_aoi(self) -> None:
+        self._aoi = [aoi.replace("Nose", "Head") for aoi in self._aoi]
+        self._aoi = [aoi.replace("Neck", "Chest") for aoi in self._aoi]
+        self._aoi = [aoi.replace("LElbow", "Left arm") for aoi in self._aoi]
+        self._aoi = [aoi.replace("RElbow", "Right arm") for aoi in self._aoi]
+        self._aoi = [aoi.replace("RKnee", "Right leg") for aoi in self._aoi]
+        self._aoi = [aoi.replace("LKnee", "Left leg") for aoi in self._aoi]
+        self._aoi = [aoi.replace("MidHip", "Pelvis") for aoi in self._aoi]
 
 @dataclass
 class RaterFileReader:
