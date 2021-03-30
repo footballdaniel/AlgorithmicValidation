@@ -8,6 +8,7 @@ import pandas as pd  # type: ignore
 
 from analysis.model.model import Dataset, NullDataset
 
+
 @dataclass
 class DataSerializer:
     _algorithmic_aoi: List[str] = field(default_factory=list)
@@ -32,11 +33,43 @@ class DataSerializer:
         pass
         a = 1
 
+
 @dataclass
 class RaterFileReader:
-    file_pattern: str
+    file_path: str
+    _trial_id: List[str] = field(default_factory=list)
+    _rater_id: List[str] = field(default_factory=list)
+    _aoi: List[str] = field(default_factory=list)
+    _frame_id: List[int] = field(default_factory=list)
 
     @property
+    def trial_id(self) -> List[str]:
+        return self._trial_id
+
+    @property
+    def aoi(self) -> List[str]:
+        return self._aoi
+
+    @property
+    def frame_id(self) -> List[int]:
+        return self._frame_id
+
+    @property
+    def rater_id(self) -> List[str]:
+        return ["Algorithm"] * len(self._frame_id)
+
+    def read(self):
+        file_list = sorted(glob(self.file_path))
+        dataframe_list = (pd.read_csv(f, header=0, dtype=str) for f in file_list)
+        dataframe = pd.concat(dataframe_list, ignore_index=True, axis=0)
+
+        # self._trial_id = list(dataframe.iloc[:, 0])
+        # self._aoi = list(dataframe.iloc[:, 1])
+        # self._frame_id = dataframe.index
+        self._trial_id = list(dataframe.iloc[:, 3])
+        self._rater_id = list(dataframe.iloc[:, 2])
+        self._aoi = list(dataframe.iloc[:, 1])
+        self._frame_id = list(dataframe.iloc[:, 0].astype(int))
 
 
 @dataclass
@@ -55,17 +88,22 @@ class AlgorithmicFileReader:
         return self._aoi
 
     @property
-    def frame_id (self) -> List[int]:
+    def frame_id(self) -> List[int]:
         return self._frame_id
 
+    @property
+    def rater_id(self) -> List[str]:
+        return ["Algorithm"] * len(self._frame_id)
+
     def read(self) -> None:
-        file_list = glob(self.file_path)
+        file_list = sorted(glob(self.file_path))
         dataframe_list = (pd.read_csv(f, header=None, dtype=str) for f in file_list)
         dataframe = pd.concat(dataframe_list, ignore_index=False, axis=0)
 
         self._trial_id = list(dataframe.iloc[:, 0])
         self._aoi = list(dataframe.iloc[:, 1])
         self._frame_id = dataframe.index
+
 
 class DataPreprocessor:
     @property
@@ -75,7 +113,6 @@ class DataPreprocessor:
     @property
     def rater_data(self) -> pd.DataFrame:
         return self._algorithmic_data
-
 
     def load(self, algorithmic_data: str, rater_data: str) -> None:
         self._load_algorithmic_data(algorithmic_data)

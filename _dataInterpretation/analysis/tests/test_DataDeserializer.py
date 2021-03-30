@@ -15,10 +15,25 @@ class TestAlgorithmicFileReader:
     def test_read_txt_data_from_several_files_frame_index_starts_at_0_for_each_file(self) -> None:
         file_reader = AlgorithmicFileReader("analysis/tests/data/P*.txt")
         file_reader.read()
-        expected = [0, 1, 2, 0, 1]
+        expected = [0, 1, 0, 1, 2]
         assert all([a == b for a, b in zip(file_reader.frame_id, expected)])
+
+    def test_raterid_should_return_list_of_string_with_length_of_data(self) -> None:
+        file_reader = AlgorithmicFileReader("analysis/tests/data/P*.txt")
+        file_reader._frame_id = range(5)
+        assert len(file_reader.rater_id) == 5
+        assert file_reader.rater_id[0] == "Algorithm"
 
 
 class TestRaterFileReader:
     def test_read_csv_data_from_several_files_concatenate_right_number_of_lines(self) -> None:
-        file_reader = RaterFileReader()
+        file_reader = RaterFileReader("analysis/tests/data/data_*.csv")
+        file_reader.read()
+        assert len(file_reader.trial_id) == 5
+
+    def test_read_csv_data_retrieve_frame_ids(self) -> None:
+        file_reader = RaterFileReader("analysis/tests/data/data_*.csv")
+        file_reader.read()
+
+        expected = [175, 176, 175, 176, 177]
+        assert all([a == b for a, b in zip(file_reader.frame_id, expected)])
