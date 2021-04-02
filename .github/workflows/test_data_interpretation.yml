@@ -21,4 +21,4 @@ jobs:
       
       - name: Unit tests
         run: |
-          pytest _dataInterpretation/dataInterpretation
+          pytest _dataInterpretation/analysis
