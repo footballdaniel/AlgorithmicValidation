@@ -25,7 +25,7 @@ jobs:
 
       - name: Check imported modules
         run: |
-          isort _dataInterpretation/dataInterpretation
+          isort _dataInterpretation/dataInterpretation --recursive --diff
       
       - name: Test code formatting
         run: |
