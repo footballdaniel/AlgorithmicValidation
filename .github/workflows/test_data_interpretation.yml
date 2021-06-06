@@ -9,24 +9,16 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2.2.1
         with:
           python-version: 3.8
 
-      - name: Install dependencies with pipenv
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install black pytest isort
-          pip install -r _dataInterpretation/requirements.txt
+          pip install pytest
+          pip install -r requirements.txt
       
       - name: Unit tests
         run: |
-          pytest _dataInterpretation/dataInterpretation
-
-      - name: Check imported modules
-        run: |
-          isort _dataInterpretation/dataInterpretation --recursive --diff
-      
-      - name: Test code formatting
-        run: |
-          black --check _dataInterpretation/dataInterpretation
+          pytest _dataInterpretation/analysis
